@@ -13,11 +13,11 @@ public class HashiGame
         Solve();
     }
 
-    public bool IsCorrect { get; private set; }
+    public bool IsSolvable { get; private set; }
 
     public void Solve()
     {
-        IsCorrect = true;
+        IsSolvable = true;
 
         CheckIslandsAndBridgesForDuplicates();
         ValidateIslands();
@@ -36,7 +36,7 @@ public class HashiGame
         if (_islands.Distinct().Count() == _islands.Count() && _bridges.Distinct().Count() == _bridges.Count())
             return true;
 
-        return IsCorrect = false;
+        return IsSolvable = false;
     }
 
     public bool ValidateIslands()
@@ -47,7 +47,7 @@ public class HashiGame
         if (!existsAnIslandOutsideOfTheBoard)
             return true;
 
-        return IsCorrect = false;
+        return IsSolvable = false;
     }
 
     public bool CheckIfBridgesConnectIslandsPresentInTheList()
@@ -58,7 +58,7 @@ public class HashiGame
         if (!existsBridgeConnectingIslandsNotPresentInTheList)
             return true;
 
-        return IsCorrect = false;
+        return IsSolvable = false;
     }
 
     public bool CheckBridgeValues()
@@ -70,7 +70,7 @@ public class HashiGame
         if (!existsIslandWithValueNotMatchingTheNumberOfBridgesConnectedToIt)
             return true;
 
-        return IsCorrect = false;
+        return IsSolvable = false;
     }
 
     public bool CheckForDiagonalBridges()
@@ -81,7 +81,7 @@ public class HashiGame
         if (!existsDiagonalBridge)
             return true;
 
-        return IsCorrect = false;
+        return IsSolvable = false;
     }
 
     public bool CheckIfAnyTwoBridgesCrossEachOther()
@@ -105,10 +105,10 @@ public class HashiGame
                         continue;
 
                     if (bridge1.Island1.X > bridge2.Island1.X && bridge1.Island1.X < bridge2.Island2.X)
-                        return IsCorrect = false;
+                        return IsSolvable = false;
 
                     if (bridge1.Island1.X < bridge2.Island1.X && bridge1.Island1.X > bridge2.Island2.X)
-                        return IsCorrect = false;
+                        return IsSolvable = false;
                 }
 
                 if (isVertical1 && isVertical2)
@@ -117,10 +117,10 @@ public class HashiGame
                         continue;
 
                     if (bridge1.Island1.Y > bridge2.Island1.Y && bridge1.Island1.Y < bridge2.Island2.Y)
-                        return IsCorrect = false;
+                        return IsSolvable = false;
 
                     if (bridge1.Island1.Y < bridge2.Island1.Y && bridge1.Island1.Y > bridge2.Island2.Y)
-                        return IsCorrect = false;
+                        return IsSolvable = false;
                 }
 
                 if (isHorizontal1 && isVertical2)
@@ -128,10 +128,10 @@ public class HashiGame
                     if (bridge1.Island1.X > bridge2.Island1.X && bridge1.Island1.X < bridge2.Island2.X)
                     {
                         if (bridge2.Island1.Y > bridge1.Island1.Y && bridge2.Island1.Y < bridge1.Island2.Y)
-                            return IsCorrect = false;
+                            return IsSolvable = false;
 
                         if (bridge2.Island1.Y < bridge1.Island1.Y && bridge2.Island1.Y > bridge1.Island2.Y)
-                            return IsCorrect = false;
+                            return IsSolvable = false;
                     }
                 }
             }
@@ -158,7 +158,7 @@ public class HashiGame
                 if (isHorizontal)
                 {
                     if (island.X == island1.X && island.Y > island1.Y && island.Y < island2.Y)
-                        return IsCorrect = false;
+                        return IsSolvable = false;
                 }
 
                 if (!isVertical)
@@ -167,7 +167,7 @@ public class HashiGame
                 if (island.Y != island1.Y || island.X <= island1.X || island.X >= island2.X)
                     continue;
 
-                return IsCorrect = false;
+                return IsSolvable = false;
             }
         }
 
@@ -182,7 +182,7 @@ public class HashiGame
         if (!existsMoreThanTwoBridgesConnectingAnyTwoIslands)
             return true;
 
-        return IsCorrect = false;
+        return IsSolvable = false;
     }
 
     public bool CheckIfTheNumberOfBridgesConnectedToAnIslandIsEqualToTheIslandValue()
@@ -198,7 +198,7 @@ public class HashiGame
         if (!isNumberOfBridgesConnectedToAnIslandEqualToTheIslandValue)
             return true;
 
-        return IsCorrect = false;
+        return IsSolvable = false;
     }
 
     public bool CheckIfAllIslandsAreConnectedInOneGroup()
@@ -226,6 +226,6 @@ public class HashiGame
         if (allDistinctIslands.Count() == _islands.Count())
             return true;
 
-        return IsCorrect = false;
+        return IsSolvable = false;
     }
 }
