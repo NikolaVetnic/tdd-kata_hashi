@@ -10,12 +10,12 @@ public class HashiGame
         _islands = solution.Islands;
         _bridges = solution.Bridges;
 
-        Solve();
+        CheckSolvability();
     }
 
     public bool IsSolvable { get; private set; }
 
-    public void Solve()
+    public void CheckSolvability()
     {
         IsSolvable = true;
 
@@ -65,7 +65,7 @@ public class HashiGame
     {
         var existsIslandWithValueNotMatchingTheNumberOfBridgesConnectedToIt = _islands
             .Any(island => _bridges.Where(b => b.Island1.Equals(island) || b.Island2.Equals(island))
-            .Sum(b => b.Value) != island.Code % 10);
+            .Sum(b => b.Value) != island.Value);
 
         if (!existsIslandWithValueNotMatchingTheNumberOfBridgesConnectedToIt)
             return true;
