@@ -6,10 +6,22 @@ namespace Kata_Bowling;
 
 public class HashiGameTest
 {
+    /*
+     * 2
+     * ‖
+     * 3 - 1
+     */
     private readonly Solution _solution1 = new(
         new() { new(113), new(211), new(122) },
         new() { new(113, 211, 1), new(113, 122, 2) });
 
+    /*
+     * 2 ----- 1
+     * |
+     * 5 = 2
+     * ‖  
+     * 4 ===== 2
+     */
     private readonly Solution _solution2 = new(
         new()
         {
@@ -21,7 +33,9 @@ public class HashiGameTest
             new (125, 132, 1), new(132, 331, 1)
         });
 
-    // https://jayisgames.com/images/conceptis-hashi/hashi8x8p10.jpg
+    /*
+     * https://jayisgames.com/images/conceptis-hashi/hashi8x8p10.jpg
+     */
     private readonly Solution _solution3 = new(
         new()
         {
