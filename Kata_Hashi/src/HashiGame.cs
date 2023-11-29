@@ -41,9 +41,10 @@ public class HashiGame
 
     public bool ValidateIslands()
     {
-        if (!(from island in _islands
-              where island.X < 0 || island.X > 9 || island.Y < 0 || island.Y > 9
-              select island).Any())
+        var existsAnIslandOutsideOfTheBoard = _islands
+            .Any(island => island.X < 0 || island.X > 9 || island.Y < 0 || island.Y > 9);
+
+        if (!existsAnIslandOutsideOfTheBoard)
             return true;
 
         return IsCorrect = false;
@@ -51,9 +52,10 @@ public class HashiGame
 
     public bool CheckIfBridgesConnectIslandsPresentInTheList()
     {
-        if (!(from bridge in _bridges
-              where !_islands.Contains(bridge.Island1) || !_islands.Contains(bridge.Island2)
-              select bridge).Any())
+        var existsBridgeConnectingIslandsNotPresentInTheList = _bridges
+            .Any(bridge => !_islands.Contains(bridge.Island1) || !_islands.Contains(bridge.Island2));
+
+        if (!existsBridgeConnectingIslandsNotPresentInTheList)
             return true;
 
         return IsCorrect = false;
@@ -61,11 +63,11 @@ public class HashiGame
 
     public bool CheckBridgeValues()
     {
-        if (!(from island in _islands
-              let bridges = _bridges.Where(b => b.Island1.Equals(island) || b.Island2.Equals(island))
-              let sum = bridges.Sum(b => b.Value)
-              where sum != island.Code % 10
-              select island).Any())
+        var existsIslandWithValueNotMatchingTheNumberOfBridgesConnectedToIt = _islands
+            .Any(island => _bridges.Where(b => b.Island1.Equals(island) || b.Island2.Equals(island))
+            .Sum(b => b.Value) != island.Code % 10);
+
+        if (!existsIslandWithValueNotMatchingTheNumberOfBridgesConnectedToIt)
             return true;
 
         return IsCorrect = false;
@@ -73,13 +75,10 @@ public class HashiGame
 
     public bool CheckForDiagonalBridges()
     {
-        if (!(from bridge in _bridges
-              let island1 = bridge.Island1
-              let island2 = bridge.Island2
-              let isHorizontalOk = island1.X == island2.X
-              let isVerticalOk = island1.Y == island2.Y
-              where !isHorizontalOk && !isVerticalOk
-              select isHorizontalOk).Any())
+        var existsDiagonalBridge = _bridges
+            .Any(bridge => bridge.Island1.X != bridge.Island2.X && bridge.Island1.Y != bridge.Island2.Y);
+
+        if (!existsDiagonalBridge)
             return true;
 
         return IsCorrect = false;
@@ -92,9 +91,7 @@ public class HashiGame
             foreach (var bridge2 in _bridges)
             {
                 if (bridge1.Equals(bridge2))
-                {
                     continue;
-                }
 
                 var isHorizontal1 = bridge1.Island1.X == bridge1.Island2.X;
                 var isVertical1 = bridge1.Island1.Y == bridge1.Island2.Y;
@@ -179,11 +176,10 @@ public class HashiGame
 
     public bool CheckIfMoreThanTwoBridgesConnectAnyTwoIslands()
     {
-        if (!(from island1 in _islands
-              from island2 in _islands
-              where !island1.Equals(island2)
-              select _bridges.Where(b => b.Island1.Equals(island1) && b.Island2.Equals(island2)))
-            .Any(bridges => bridges.Count() > 2))
+        var existsMoreThanTwoBridgesConnectingAnyTwoIslands = _islands
+            .Any(island1 => _islands.Any(island2 => !island1.Equals(island2) && _bridges.Count(b => b.Island1.Equals(island1) && b.Island2.Equals(island2)) > 2));
+
+        if (!existsMoreThanTwoBridgesConnectingAnyTwoIslands)
             return true;
 
         return IsCorrect = false;
@@ -191,10 +187,15 @@ public class HashiGame
 
     public bool CheckIfTheNumberOfBridgesConnectedToAnIslandIsEqualToTheIslandValue()
     {
-        if (!(from island in _islands
-              let bridges = _bridges.Where(b => b.Island1.Equals(island) || b.Island2.Equals(island))
-              where bridges.Sum(b => b.Value) != island.Code % 10
-              select island).Any())
+        var isNumberOfBridgesConnectedToAnIslandEqualToTheIslandValue = (
+            from island in _islands
+            let bridges = _bridges
+                .Where(b => b.Island1.Equals(island) || b.Island2.Equals(island))
+            where bridges
+                .Sum(b => b.Value) != island.Value
+            select island).Any();
+
+        if (!isNumberOfBridgesConnectedToAnIslandEqualToTheIslandValue)
             return true;
 
         return IsCorrect = false;
