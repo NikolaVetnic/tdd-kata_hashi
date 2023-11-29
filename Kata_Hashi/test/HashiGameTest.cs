@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using System.Collections;
+using FluentAssertions;
 using Kata_Hashi;
 using Xunit;
 
@@ -6,12 +7,71 @@ namespace Kata_Bowling;
 
 public class HashiGameTest
 {
+    [Theory]
+    [ClassData(typeof(TestSolution))]
+    public void Test_bridge_values_check(Solution solution)
+    {
+        var game = new HashiGame(solution);
+        game.CheckBridgeValues().Should().BeTrue();
+    }
+
+    [Theory]
+    [ClassData(typeof(TestSolution))]
+    public void Test_diagonal_bridges_check(Solution solution)
+    {
+        var game = new HashiGame(solution);
+        game.CheckForDiagonalBridges().Should().BeTrue();
+    }
+
+    [Theory]
+    [ClassData(typeof(TestSolution))]
+    public void Test_two_bridges_crossing_each_other_check(Solution solution)
+    {
+        var game = new HashiGame(solution);
+        game.CheckIfAnyTwoBridgesCrossEachOther().Should().BeTrue();
+    }
+
+    [Theory]
+    [ClassData(typeof(TestSolution))]
+    public void Test_if_any_bridges_crosses_an_island_check(Solution solution)
+    {
+        var game = new HashiGame(solution);
+        game.CheckIfAnyBridgesCrossesAnIsland().Should().BeTrue();
+    }
+
+    [Theory]
+    [ClassData(typeof(TestSolution))]
+    public void Test_if_more_than_two_bridges_connect_any_two_islands_check(Solution solution)
+    {
+        var game = new HashiGame(solution);
+        game.CheckIfMoreThanTwoBridgesConnectAnyTwoIslands().Should().BeTrue();
+    }
+
+    [Theory]
+    [ClassData(typeof(TestSolution))]
+    public void Test_if_the_number_of_bridges_connected_to_an_island_is_equal_to_the_island_value_check(Solution solution)
+    {
+        var game = new HashiGame(solution);
+        game.CheckIfTheNumberOfBridgesConnectedToAnIslandIsEqualToTheIslandValue().Should().BeTrue();
+    }
+
+    [Theory]
+    [ClassData(typeof(TestSolution))]
+    public void Test_if_all_islands_are_connected_in_one_group_check(Solution solution)
+    {
+        var game = new HashiGame(solution);
+        game.CheckIfAllIslandsAreConnectedInOneGroup().Should().BeTrue();
+    }
+}
+
+public class TestSolution : IEnumerable<object[]>
+{
     /*
      * 2
      * ‖
      * 3 - 1
      */
-    private readonly Solution _solution1 = new(
+    private static readonly Solution _solution1 = new(
         new() { new(113), new(211), new(122) },
         new() { new(113, 211, 1), new(113, 122, 2) });
 
@@ -19,10 +79,10 @@ public class HashiGameTest
      * 2 ----- 1
      * |
      * 5 = 2
-     * ‖  
+     * ‖
      * 4 ===== 2
      */
-    private readonly Solution _solution2 = new(
+    private static readonly Solution _solution2 = new(
         new()
         {
             new(114), new(312), new(125), new(222), new(132), new(331)
@@ -36,7 +96,7 @@ public class HashiGameTest
     /*
      * https://jayisgames.com/images/conceptis-hashi/hashi8x8p10.jpg
      */
-    private readonly Solution _solution3 = new(
+    private static readonly Solution _solution3 = new(
         new()
         {
             new(113), new(315), new(513), new(813), new(133), new(332),
@@ -58,87 +118,14 @@ public class HashiGameTest
         }
     );
 
-    [Fact]
-    public void Test_bridge_values_check()
+    private readonly List<object[]> _data = new()
     {
-        var game1 = new HashiGame(_solution1);
-        var game2 = new HashiGame(_solution2);
-        var game3 = new HashiGame(_solution3);
+        new object[] { _solution1 },
+        new object[] { _solution2 },
+        new object[] { _solution3 }
+    };
 
-        game1.CheckBridgeValues().Should().BeTrue();
-        game2.CheckBridgeValues().Should().BeTrue();
-        game3.CheckBridgeValues().Should().BeTrue();
-    }
+    public IEnumerator<object[]> GetEnumerator() => _data.GetEnumerator();
 
-    [Fact]
-    public void Test_diagonal_bridges_check()
-    {
-        var game1 = new HashiGame(_solution1);
-        var game2 = new HashiGame(_solution2);
-        var game3 = new HashiGame(_solution3);
-
-        game1.CheckForDiagonalBridges().Should().BeTrue();
-        game2.CheckForDiagonalBridges().Should().BeTrue();
-        game3.CheckForDiagonalBridges().Should().BeTrue();
-    }
-
-    [Fact]
-    public void Test_two_bridges_crossing_each_other_check()
-    {
-        var game1 = new HashiGame(_solution1);
-        var game2 = new HashiGame(_solution2);
-        var game3 = new HashiGame(_solution3);
-
-        game1.CheckIfAnyTwoBridgesCrossEachOther().Should().BeTrue();
-        game2.CheckIfAnyTwoBridgesCrossEachOther().Should().BeTrue();
-        game3.CheckIfAnyTwoBridgesCrossEachOther().Should().BeTrue();
-    }
-
-    [Fact]
-    public void Test_if_any_bridges_crosses_an_island_check()
-    {
-        var game1 = new HashiGame(_solution1);
-        var game2 = new HashiGame(_solution2);
-        var game3 = new HashiGame(_solution3);
-
-        game1.CheckIfAnyBridgesCrossesAnIsland().Should().BeTrue();
-        game2.CheckIfAnyBridgesCrossesAnIsland().Should().BeTrue();
-        game3.CheckIfAnyBridgesCrossesAnIsland().Should().BeTrue();
-    }
-
-    [Fact]
-    public void Test_if_more_than_two_bridges_connect_any_two_islands_check()
-    {
-        var game1 = new HashiGame(_solution1);
-        var game2 = new HashiGame(_solution2);
-        var game3 = new HashiGame(_solution3);
-
-        game1.CheckIfMoreThanTwoBridgesConnectAnyTwoIslands().Should().BeTrue();
-        game2.CheckIfMoreThanTwoBridgesConnectAnyTwoIslands().Should().BeTrue();
-        game3.CheckIfMoreThanTwoBridgesConnectAnyTwoIslands().Should().BeTrue();
-    }
-
-    [Fact]
-    public void Test_if_the_number_of_bridges_connected_to_an_island_is_equal_to_the_island_value_check()
-    {
-        var game1 = new HashiGame(_solution1);
-        var game2 = new HashiGame(_solution2);
-        var game3 = new HashiGame(_solution3);
-
-        game1.CheckIfTheNumberOfBridgesConnectedToAnIslandIsEqualToTheIslandValue().Should().BeTrue();
-        game2.CheckIfTheNumberOfBridgesConnectedToAnIslandIsEqualToTheIslandValue().Should().BeTrue();
-        game3.CheckIfTheNumberOfBridgesConnectedToAnIslandIsEqualToTheIslandValue().Should().BeTrue();
-    }
-
-    [Fact]
-    public void Test_if_all_islands_are_connected_in_one_group_check()
-    {
-        var game1 = new HashiGame(_solution1);
-        var game2 = new HashiGame(_solution2);
-        var game3 = new HashiGame(_solution3);
-
-        game1.CheckIfAllIslandsAreConnectedInOneGroup().Should().BeTrue();
-        game2.CheckIfAllIslandsAreConnectedInOneGroup().Should().BeTrue();
-        game3.CheckIfAllIslandsAreConnectedInOneGroup().Should().BeTrue();
-    }
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 }
