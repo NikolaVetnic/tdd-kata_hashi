@@ -9,6 +9,30 @@ public class HashiGameTest
 {
     [Theory]
     [ClassData(typeof(TestSolution))]
+    public void Test_islands_and_bridges_for_duplicates_check(Solution solution)
+    {
+        var game = new HashiGame(solution);
+        game.CheckIslandsAndBridgesForDuplicates().Should().BeTrue();
+    }
+
+    [Theory]
+    [ClassData(typeof(TestSolution))]
+    public void Test_islands_validation(Solution solution)
+    {
+        var game = new HashiGame(solution);
+        game.ValidateIslands().Should().BeTrue();
+    }
+
+    [Theory]
+    [ClassData(typeof(TestSolution))]
+    public void Test_if_bridges_connect_islands_present_in_the_list_check(Solution solution)
+    {
+        var game = new HashiGame(solution);
+        game.CheckIfBridgesConnectIslandsPresentInTheList().Should().BeTrue();
+    }
+
+    [Theory]
+    [ClassData(typeof(TestSolution))]
     public void Test_bridge_values_check(Solution solution)
     {
         var game = new HashiGame(solution);
