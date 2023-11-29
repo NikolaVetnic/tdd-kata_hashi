@@ -28,19 +28,19 @@ public class HashiGame
         CheckIfAllIslandsAreConnectedInOneGroup();
     }
 
-    private void CheckBridgeValues()
+    public bool CheckBridgeValues()
     {
         if (!(from island in _islands
                 let bridges = _bridges.Where(b => b.Island1.Equals(island) || b.Island2.Equals(island))
                 let sum = bridges.Sum(b => b.Value)
                 where sum != island.Code % 10
                 select island).Any()) 
-            return;
+            return true;
         
-        IsCorrect = false;
+        return IsCorrect = false;
     }
 
-    private void CheckForDiagonalBridges()
+    public bool CheckForDiagonalBridges()
     {
         if (!(from bridge in _bridges
                 let island1 = bridge.Island1
@@ -49,12 +49,12 @@ public class HashiGame
                 let isVerticalOk = island1.Y == island2.Y
                 where !isHorizontalOk && !isVerticalOk
                 select isHorizontalOk).Any()) 
-            return;
+            return true;
         
-        IsCorrect = false;
+        return IsCorrect = false;
     }
 
-    private void CheckIfAnyTwoBridgesCrossEachOther()
+    public bool CheckIfAnyTwoBridgesCrossEachOther()
     {
         foreach (var bridge1 in _bridges)
         {
@@ -74,41 +74,25 @@ public class HashiGame
                 if (isHorizontal1 && isHorizontal2)
                 {
                     if (bridge1.Island1.Y != bridge2.Island1.Y)
-                    {
                         continue;
-                    }
 
                     if (bridge1.Island1.X > bridge2.Island1.X && bridge1.Island1.X < bridge2.Island2.X)
-                    {
-                        IsCorrect = false;
-                        return;
-                    }
+                        return IsCorrect = false;
 
                     if (bridge1.Island1.X < bridge2.Island1.X && bridge1.Island1.X > bridge2.Island2.X)
-                    {
-                        IsCorrect = false;
-                        return;
-                    }
+                        return IsCorrect = false;
                 }
 
                 if (isVertical1 && isVertical2)
                 {
                     if (bridge1.Island1.X != bridge2.Island1.X)
-                    {
                         continue;
-                    }
 
                     if (bridge1.Island1.Y > bridge2.Island1.Y && bridge1.Island1.Y < bridge2.Island2.Y)
-                    {
-                        IsCorrect = false;
-                        return;
-                    }
+                        return IsCorrect = false;
 
                     if (bridge1.Island1.Y < bridge2.Island1.Y && bridge1.Island1.Y > bridge2.Island2.Y)
-                    {
-                        IsCorrect = false;
-                        return;
-                    }
+                        return IsCorrect = false;
                 }
 
                 if (isHorizontal1 && isVertical2)
@@ -116,23 +100,19 @@ public class HashiGame
                     if (bridge1.Island1.X > bridge2.Island1.X && bridge1.Island1.X < bridge2.Island2.X)
                     {
                         if (bridge2.Island1.Y > bridge1.Island1.Y && bridge2.Island1.Y < bridge1.Island2.Y)
-                        {
-                            IsCorrect = false;
-                            return;
-                        }
+                            return IsCorrect = false;
 
                         if (bridge2.Island1.Y < bridge1.Island1.Y && bridge2.Island1.Y > bridge1.Island2.Y)
-                        {
-                            IsCorrect = false;
-                            return;
-                        }
+                            return IsCorrect = false;
                     }
                 }
             }
         }
+
+        return true;
     }
 
-    private void CheckIfAnyBridgesCrossesAnIsland()
+    public bool CheckIfAnyBridgesCrossesAnIsland()
     {
         foreach (var bridge in _bridges)
         {
@@ -142,9 +122,7 @@ public class HashiGame
             foreach (var island in _islands)
             {
                 if (island.Equals(island1) || island.Equals(island2))
-                {
                     continue;
-                }
 
                 var isHorizontal = island1.X == island2.X;
                 var isVertical = island1.Y == island2.Y;
@@ -152,10 +130,7 @@ public class HashiGame
                 if (isHorizontal)
                 {
                     if (island.X == island1.X && island.Y > island1.Y && island.Y < island2.Y)
-                    {
-                        IsCorrect = false;
-                        return;
-                    }
+                        return IsCorrect = false;
                 }
 
                 if (!isVertical) 
@@ -164,36 +139,37 @@ public class HashiGame
                 if (island.Y != island1.Y || island.X <= island1.X || island.X >= island2.X) 
                     continue;
                 
-                IsCorrect = false;
-                return;
+                return IsCorrect = false;
             }
         }
+
+        return true;
     }
 
-    private void CheckIfMoreThanTwoBridgesConnectAnyTwoIslands()
+    public bool CheckIfMoreThanTwoBridgesConnectAnyTwoIslands()
     {
         if (!(from island1 in _islands
                 from island2 in _islands
                 where !island1.Equals(island2)
                 select _bridges.Where(b => b.Island1.Equals(island1) && b.Island2.Equals(island2)))
             .Any(bridges => bridges.Count() > 2)) 
-            return;
+            return true;
         
-        IsCorrect = false;
+        return IsCorrect = false;
     }
 
-    private void CheckIfTheNumberOfBridgesConnectedToAnIslandIsEqualToTheIslandValue()
+    public bool CheckIfTheNumberOfBridgesConnectedToAnIslandIsEqualToTheIslandValue()
     {
         if (!(from island in _islands
                 let bridges = _bridges.Where(b => b.Island1.Equals(island) || b.Island2.Equals(island))
                 where bridges.Sum(b => b.Value) != island.Code % 10
                 select island).Any()) 
-            return;
+            return true;
         
-        IsCorrect = false;
+        return IsCorrect = false;
     }
 
-    private void CheckIfAllIslandsAreConnectedInOneGroup()
+    public bool CheckIfAllIslandsAreConnectedInOneGroup()
     {
         var groups = new List<List<Island>>();
 
@@ -203,13 +179,6 @@ public class HashiGame
 
             foreach (var bridge in _bridges)
             {
-                var i = island.Code;
-                var b = bridge;
-
-                var i1 = b.Island1.Code;
-                var i2 = b.Island2.Code;
-                var v = b.Value;
-
                 if (bridge.Island1.Equals(island))
                     group.Add(bridge.Island2);
 
@@ -223,8 +192,8 @@ public class HashiGame
         var allDistinctIslands = groups.SelectMany(group => group).Distinct();
 
         if (allDistinctIslands.Count() == _islands.Count())
-            return;
+            return true;
         
-        IsCorrect = false;
+        return IsCorrect = false;
     }
 }
